@@ -4,6 +4,7 @@ from tempfile import TemporaryDirectory
 import webbrowser
 import time
 
+import yaml
 from ezcv.core import generate_site
 from flask import render_template, Flask, request, redirect, send_file
 from jinja2.exceptions import TemplateNotFound
@@ -46,7 +47,7 @@ def preview_site():
     with TemporaryDirectory() as tmpdir:
         generate_site(tmpdir)
         open_in_browser(tmpdir)
-        time.sleep(5)
+        time.sleep(9.0)
 
     return redirect("/")
 
@@ -59,6 +60,19 @@ def gallery_images(path):
     else:
         return send_file(f"content/gallery/{path}")
 
+
+@app.route('/config', methods=['GET', 'POST'])
+def config_page():
+    if request.method == 'GET':
+        with open('config.yml') as file:
+            data = yaml.safe_load(file)
+        return json.dumps(data)
+    elif request.method == 'POST':
+        data = json.loads(str(request.data.decode("utf-8") ))
+        with open('config.yml', 'w+') as file:
+            file.write("# See https://ezcv.readthedocs.io for documentation\n")
+            yaml.dump(data, file)
+        return redirect("/")
 
 @app.route('/')
 def index():

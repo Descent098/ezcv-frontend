@@ -16,7 +16,7 @@ You have two choices:
 
 1. Run `pip install -r requirements.txt`
 2. Install the dependencies individually:
-   `pip install ezcv` and `pip install flask`
+   `pip install ezcv`, `pip install pyyaml` and `pip install flask`
 
 
 
@@ -50,7 +50,7 @@ There is an exception if the path has `/gallery` at the beginning then it will r
 
 
 
+## Notes
 
-
-
+Features in the [extensions](https://ezcv.readthedocs.io/en/latest/usage/#included-extensions) section are not visible in the editor (except formulas, but they have a different format). So for example if you create a footnote then it will render correctly when you're done, but won't show any differently in the editor.
 

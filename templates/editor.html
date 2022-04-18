@@ -1,18 +1,28 @@
-<!-- Include stylesheet -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<!DOCTYPE html>
+<!--highlightjs-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs-themes@1.0.0/monokai_sublime.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+
+
 <!-- Include the Quill library -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/quilljs-markdown@latest/dist/quilljs-markdown.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.0.3/showdown.min.js" integrity="sha512-vx8rJNrYIZPDr290AV2tL04x0CKjLHSnTXrHMeb1kqbhfGwBnclPDOWIWxRiVS6Oe1oGzk5MzNz/eLzVku30kg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- Bootstrap-->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- Katex -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css" integrity="sha384-KiWOvVjnN8qwAZbuQyWDIbfCLFhLXNETzBQjA/92pIowpC0d2O3nppDGQVgwd2nB" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js" integrity="sha384-0fdwu/T/EQMsQlrHCCHoH10pkPLlKA1jL5dFyUOvB3lfeT2540/2g6YgSi2BL14p" crossorigin="anonymous"></script>
 
-
+<script src="/metadataManagement.js"></script>
+<script src="/formSerialization.js"></script>
 
 <h1 id="title"></h1> <a href="/" >
     <br>
-    <h2 style="background-color: black;">Go back to homepage</h2></a>
+<a href="/" class="btn btn-info" role="button">Go back to homepage</a>
+<a href="/preview" class="btn btn-info" role="button">Generate preview</a>
+
     <br>
     <br>
 
@@ -46,36 +56,28 @@
     const filename = titleParam;
     const filepath = `/${filename}`;
 
+    hljs.configure({   // optionally configure hljs
+        languages: ['javascript', 'ruby', 'python', 'java', 'c']
+    });
 
     const options = {
-    theme: 'snow'
+    theme: 'snow',
+    modules: {
+        syntax: true, 
+        toolbar: [
+            ['image'],
+            ['bold', 'italic', 'underline', 'strike', 'link', 'blockquote', 'code-block', 'formula'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'script': 'sub'}, { 'script': 'super' }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'color': [] }, { 'background': [] }],
+            ['clean']
+    ]
+    },
     }
     // Create editor
 
     const editor = new Quill('#editor', options)
-    const markdownOptions = {
-        /**
-         ignoreTags: [ 'pre', 'strikethrough'], // @option - if you need to ignore some tags.
-        
-        tags: { // @option if you need to change for trigger pattern for some tags. 
-        blockquote: {
-            pattern: /^(\|){1,6}\s/g,
-        },
-        bold: {
-            pattern:  /^(\|){1,6}\s/g,
-        },
-        italic: {
-            pattern: /(\_){1}(.+?)(?:\1){1}/g,
-        },
-        },
-        */
-    };
-
-    // markdown is enabled
-    const quillMarkdown = new QuillMarkdown(editor, markdownOptions)
-
-    // markdown is now disabled  
-    // quillMarkdown.destroy()
 
     // Get file content and metadata
     fetch(filepath).then(response => response.text()).then(text => {
@@ -88,56 +90,7 @@
     editor.update();
      // End of setting up page
 
-    function isNumber(num){
-        // Checks if num is a number (or entirely numbers)
-        return !isNaN(num)
-    }
-
-    // Display metadata
-    function displayMetadata(metadata){
-        metadata_div = document.getElementById("metadata")
-        metadata_form = document.getElementById("metadataForm")
-
-        for (var key in metadata) {
-            if (isNumber(metadata[key])){   // Numbers
-                metadata_form.innerHTML += `<div class="form-group"><label for="${key}">${key}</label><input type="number" class="form-control" id="${key}" name="${key}" value="${metadata[key]}"></div>`
-            } else if ( metadata[key].toLowerCase() =="true" || metadata[key].toLowerCase() =="false"){ // Booleans
-
-                if (metadata[key].toLowerCase() =="true"){
-                    checked = "checked"
-                } else {
-                    checked = ""
-                }
-                metadata_form.innerHTML += `<div class="form-group"><label for="${key}">${key}</label><input type="checkbox" class="form-control" id="${key}" name="${key}" ${checked}></div>`
-            }else { // Strings
-            metadata_form.innerHTML += `<div class="form-group row">
-                    <label for="${key}" class="col-4 col-form-label">${key}</label> 
-                    <div class="col-8">
-                        <input id="${key}" name="${key}" value="${metadata[key]}" type="text" class="form-control">
-                    </div>
-                </div>`
-        }
-    } // End of key iteration
-    };
-
-
-
-
-
-    function getMetadataAsJSON(){// TODO
-        data = {};
-        
-        metadata_form = document.getElementById("metadataForm");
-        // const formEntries = new FormData(metadata_form).entries();
-        // const formData = Object.assign(...Array.from(formEntries, ([name, value]) => ({[name]: value})));
-        const formData = serializeForm(metadata_form);
-        // console.log(formData);
-        for (var index in formData) {
-            data[formData[index]["name"]] = formData[index]["value"];
-        }
-        console.log(data)
-        return data
-    }
+    
 
     function serializeCurrentContent() {
         // Serialize the current content of the editor & Metadata
@@ -185,71 +138,4 @@
         // console.log(content_json)
         // return content_json;
     }
-
-    var serializeForm = (function (slice) { /// from https://stackoverflow.com/questions/30964568/how-to-get-a-key-value-data-set-from-a-html-form
-    return function (form) {
-        //no form, no serialization
-        if (form == null)
-            return null;
-
-        //get the form elements and convert to an array
-        return slice.call(form.elements)
-            .filter(function (element) {
-                //remove disabled elements
-                return !element.disabled;
-            }).filter(function (element) {
-                //remove <select multiple> elements with no values selected
-                return !/^select$/i.test(element.tagName) || element.selectedOptions.length > 0;
-            }).map(function (element) {
-                switch (element.tagName.toLowerCase()) {
-                    case 'checkbox':
-                        console.log(`checkbox is ${element.checked}`);
-                        return {
-                            name: element.name,
-                            value: element.checked
-                        };
-                    case 'radio':
-                        console.log(`radio is ${element.checked}`);
-                        return {
-                            name: element.name,
-                            value: element.value === null ? true : false
-                        };
-                    case 'select':
-                        if (element.multiple) {
-                            return {
-                                name: element.name,
-                                value: slice.call(element.selectedOptions)
-                                    .map(function (option) {
-                                        return option.value;
-                                    })
-                            };
-                        }
-
-                        return {
-                            name: element.name,
-                            value: isNumber( element.value) ? parseInt(element.value) : element.value
-                        };
-                    default:
-                        if (element.type =="number"){
-                            return {
-                                name: element.name,
-                                value: parseInt(element.value)
-                            };
-                        } else if (element.type == "checkbox"){
-                            return {
-                                name: element.name,
-                                value: element.checked
-                            };
-                        }
-                        
-                        else {
-                            return {
-                                name: element.name,
-                                value: element.value
-                            };
-                        };
-                }
-            });
-    }
-}(Array.prototype.slice));
 </script>
