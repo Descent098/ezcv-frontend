@@ -1,0 +1,255 @@
+<!-- Include stylesheet -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<!-- Include the Quill library -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quilljs-markdown@latest/dist/quilljs-markdown.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.0.3/showdown.min.js" integrity="sha512-vx8rJNrYIZPDr290AV2tL04x0CKjLHSnTXrHMeb1kqbhfGwBnclPDOWIWxRiVS6Oe1oGzk5MzNz/eLzVku30kg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Bootstrap-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<h1 id="title"></h1> <a href="/" >
+    <br>
+    <h2 style="background-color: black;">Go back to homepage</h2></a>
+    <br>
+    <br>
+
+<h2>Metadata</h2>
+
+<div id="metadata" style="padding-left: 15px;padding-right: 15px;">
+    <form id="metadataForm">
+    <!--This will be filled with the metadata that exists-->
+    </form>
+</div>
+
+<br>
+<br>
+<br>
+<h2>Content</h2>
+
+<div id="editor"></div>
+
+<button onclick=serializeCurrentContent()>Click me to serialize</button>
+<button onclick=getMetadataAsJSON()>Click me to serialize metadata</button>
+
+
+<br><br><br>
+<h2>Export Markdown</h2>
+<div id="markdownExport"></div>
+
+<script>
+
+    const titleParam = "{{path}}";
+    document.getElementById("title").innerText = titleParam;
+    const filename = titleParam;
+    const filepath = `/${filename}`;
+
+
+    const options = {
+    theme: 'snow'
+    }
+    // Create editor
+
+    const editor = new Quill('#editor', options)
+    const markdownOptions = {
+        /**
+         ignoreTags: [ 'pre', 'strikethrough'], // @option - if you need to ignore some tags.
+        
+        tags: { // @option if you need to change for trigger pattern for some tags. 
+        blockquote: {
+            pattern: /^(\|){1,6}\s/g,
+        },
+        bold: {
+            pattern:  /^(\|){1,6}\s/g,
+        },
+        italic: {
+            pattern: /(\_){1}(.+?)(?:\1){1}/g,
+        },
+        },
+        */
+    };
+
+    // markdown is enabled
+    const quillMarkdown = new QuillMarkdown(editor, markdownOptions)
+
+    // markdown is now disabled  
+    // quillMarkdown.destroy()
+
+    // Get file content and metadata
+    fetch(filepath).then(response => response.text()).then(text => {
+        const converter = new showdown.Converter({metadata: true});
+        const html = converter.makeHtml(text);       // Convert markdown to html
+        const metadata = converter.getMetadata();    // Get metadata from file
+        editor.clipboard.dangerouslyPasteHTML(html); // paste html into editor
+        displayMetadata(metadata);                   // Display metadata
+    });
+    editor.update();
+     // End of setting up page
+
+    function isNumber(num){
+        // Checks if num is a number (or entirely numbers)
+        return !isNaN(num)
+    }
+
+    // Display metadata
+    function displayMetadata(metadata){
+        metadata_div = document.getElementById("metadata")
+        metadata_form = document.getElementById("metadataForm")
+
+        for (var key in metadata) {
+            if (isNumber(metadata[key])){   // Numbers
+                metadata_form.innerHTML += `<div class="form-group"><label for="${key}">${key}</label><input type="number" class="form-control" id="${key}" name="${key}" value="${metadata[key]}"></div>`
+            } else if ( metadata[key].toLowerCase() =="true" || metadata[key].toLowerCase() =="false"){ // Booleans
+
+                if (metadata[key].toLowerCase() =="true"){
+                    checked = "checked"
+                } else {
+                    checked = ""
+                }
+                metadata_form.innerHTML += `<div class="form-group"><label for="${key}">${key}</label><input type="checkbox" class="form-control" id="${key}" name="${key}" ${checked}></div>`
+            }else { // Strings
+            metadata_form.innerHTML += `<div class="form-group row">
+                    <label for="${key}" class="col-4 col-form-label">${key}</label> 
+                    <div class="col-8">
+                        <input id="${key}" name="${key}" value="${metadata[key]}" type="text" class="form-control">
+                    </div>
+                </div>`
+        }
+    } // End of key iteration
+    };
+
+
+
+
+
+    function getMetadataAsJSON(){// TODO
+        data = {};
+        
+        metadata_form = document.getElementById("metadataForm");
+        // const formEntries = new FormData(metadata_form).entries();
+        // const formData = Object.assign(...Array.from(formEntries, ([name, value]) => ({[name]: value})));
+        const formData = serializeForm(metadata_form);
+        // console.log(formData);
+        for (var index in formData) {
+            data[formData[index]["name"]] = formData[index]["value"];
+        }
+        console.log(data)
+        return data
+    }
+
+    function serializeCurrentContent() {
+        // Serialize the current content of the editor & Metadata
+        const converter = new showdown.Converter();
+        var metadata = getMetadataAsJSON();
+        var content = converter.makeMarkdown(editor.root.innerHTML);
+        var title = document.getElementById("title").innerText;
+        var content_json = {
+            "title": title,
+            "content": content,
+            "metadata": metadata
+        }
+        markdownExportDiv = document.getElementById("markdownExport");
+
+        // Printing out data to test
+        const titleData = document.createElement("h3");
+        titleData.style.backgroundColor = "red";
+        titleData.innerText = "File Path =" + content_json["title"];
+
+        const contentData = document.createElement("div");
+        contentData.style.backgroundColor = "lightgrey";
+        contentData.innerText = "content: \n" + content_json["content"];
+
+        const metadataData = document.createElement("div");
+        metadataData.style.backgroundColor = "cyan";
+        metadataData.innerText = "Metadata: " + JSON.stringify(content_json["metadata"]);
+
+        markdownExportDiv.innerText = JSON.stringify(content_json, null, 4);
+        markdownExportDiv.appendChild(titleData);
+        markdownExportDiv.appendChild(contentData);
+        markdownExportDiv.appendChild(metadataData);
+
+        fetch(filepath, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(content_json)
+        }).then(res => {
+            console.log("Request complete! response:", res);
+            window.location.reload();
+        });
+
+        // console.log(content_json)
+        // return content_json;
+    }
+
+    var serializeForm = (function (slice) { /// from https://stackoverflow.com/questions/30964568/how-to-get-a-key-value-data-set-from-a-html-form
+    return function (form) {
+        //no form, no serialization
+        if (form == null)
+            return null;
+
+        //get the form elements and convert to an array
+        return slice.call(form.elements)
+            .filter(function (element) {
+                //remove disabled elements
+                return !element.disabled;
+            }).filter(function (element) {
+                //remove <select multiple> elements with no values selected
+                return !/^select$/i.test(element.tagName) || element.selectedOptions.length > 0;
+            }).map(function (element) {
+                switch (element.tagName.toLowerCase()) {
+                    case 'checkbox':
+                        console.log(`checkbox is ${element.checked}`);
+                        return {
+                            name: element.name,
+                            value: element.checked
+                        };
+                    case 'radio':
+                        console.log(`radio is ${element.checked}`);
+                        return {
+                            name: element.name,
+                            value: element.value === null ? true : false
+                        };
+                    case 'select':
+                        if (element.multiple) {
+                            return {
+                                name: element.name,
+                                value: slice.call(element.selectedOptions)
+                                    .map(function (option) {
+                                        return option.value;
+                                    })
+                            };
+                        }
+
+                        return {
+                            name: element.name,
+                            value: isNumber( element.value) ? parseInt(element.value) : element.value
+                        };
+                    default:
+                        if (element.type =="number"){
+                            return {
+                                name: element.name,
+                                value: parseInt(element.value)
+                            };
+                        } else if (element.type == "checkbox"){
+                            return {
+                                name: element.name,
+                                value: element.checked
+                            };
+                        }
+                        
+                        else {
+                            return {
+                                name: element.name,
+                                value: element.value
+                            };
+                        };
+                }
+            });
+    }
+}(Array.prototype.slice));
+</script>

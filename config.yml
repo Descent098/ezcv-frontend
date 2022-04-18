@@ -1,0 +1,5 @@
+# See https://ezcv.readthedocs.io for documentation
+name: name
+theme: dimension
+resume: false
+examples: true
