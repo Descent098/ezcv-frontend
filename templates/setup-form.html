@@ -1,0 +1,475 @@
+<!doctype html>
+                        <html>
+                            <head>
+                                <meta charset='utf-8'>
+                                <meta name='viewport' content='width=device-width, initial-scale=1'>
+                                <title>Setup Form</title>
+                                <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
+                                <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
+                                <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+                                <style>* {
+    margin: 0;
+    padding: 0
+}
+
+html {
+    height: 100%
+}
+
+p {
+    color: grey
+}
+
+#heading {
+    text-transform: uppercase;
+    color: #2436bc;
+    font-weight: normal
+}
+
+#setupForm {
+    text-align: center;
+    position: relative;
+    margin-top: 20px
+}
+
+#setupForm fieldset {
+    background: white;
+    border: 0 none;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding-bottom: 20px;
+    position: relative
+}
+
+.form-card {
+    text-align: left
+}
+
+#setupForm fieldset:not(:first-of-type) {
+    display: none
+}
+
+#setupForm input,
+#setupForm textarea {
+    padding: 8px 15px 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 0px;
+    margin-bottom: 25px;
+    margin-top: 2px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: montserrat;
+    color: #2C3E50;
+    background-color: #ECEFF1;
+    font-size: 16px;
+    letter-spacing: 1px
+}
+
+#setupForm input:focus,
+#setupForm textarea:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid #2436bc;
+    outline-width: 0
+}
+
+#setupForm .action-button {
+    width: 100px;
+    background: #2436bc;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 0px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 0px 10px 5px;
+    float: right
+}
+
+#setupForm .action-button:hover,
+#setupForm .action-button:focus {
+    background-color: #311B92
+}
+
+#setupForm .action-button-previous {
+    width: 100px;
+    background: #616161;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 0px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px 10px 0px;
+    float: right
+}
+
+#setupForm .action-button-previous:hover,
+#setupForm .action-button-previous:focus {
+    background-color: #000000
+}
+
+.card {
+    z-index: 0;
+    border: none;
+    position: relative
+}
+
+.fs-title {
+    font-size: 25px;
+    color: #2436bc;
+    margin-bottom: 15px;
+    font-weight: normal;
+    text-align: left
+}
+
+.purple-text {
+    color: #2436bc;
+    font-weight: normal
+}
+
+.steps {
+    font-size: 25px;
+    color: gray;
+    margin-bottom: 10px;
+    font-weight: normal;
+    text-align: right
+}
+
+.fieldlabels {
+    color: gray;
+    text-align: left
+}
+
+#progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    color: lightgrey
+}
+
+#progressbar .active {
+    color: #2436bc
+}
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 15px;
+    width: 25%;
+    float: left;
+    position: relative;
+    font-weight: 400
+}
+/* https://fontawesome.com/v5/cheatsheet */
+#progressbar #account:before {
+    font-family: FontAwesome;
+    content: "\f007"
+}
+
+#progressbar #personal:before {
+    font-family: FontAwesome;
+    content: "\f0f2"
+}
+
+#progressbar #payment:before {
+    font-family: FontAwesome;
+    content: "\f0ac"
+}
+
+#progressbar #confirm:before {
+    font-family: FontAwesome;
+    content: "\f00c"
+}
+
+#progressbar li:before {
+    width: 50px;
+    height: 50px;
+    line-height: 45px;
+    display: block;
+    font-size: 20px;
+    color: #ffffff;
+    background: lightgray;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+    padding: 2px
+}
+
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: lightgray;
+    position: absolute;
+    left: 0;
+    top: 25px;
+    z-index: -1
+}
+
+#progressbar li.active:before,
+#progressbar li.active:after {
+    background: #2436bc
+}
+
+.progress {
+    height: 20px
+}
+
+.progress-bar {
+    background-color: #2436bc
+}
+
+.fit-image {
+    width: 100%;
+    object-fit: cover
+}
+
+
+.toggle {
+  --width: 50px;
+  --height: calc(var(--width) / 2);
+  --border-radius: calc(var(--height) / 2);
+
+  display: inline-block;
+  cursor: pointer;
+}
+
+.toggle__input {
+  display: none;
+}
+
+.toggle__fill {
+  position: relative;
+  width: var(--width);
+  height: var(--height);
+  border-radius: var(--border-radius);
+  background: #7e7e7e;
+  transition: background 0.2s;
+}
+
+.toggle__input:checked ~ .toggle__fill {
+  background: #009578;
+}
+
+.toggle__fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--height);
+  width: var(--height);
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  border-radius: var(--border-radius);
+  transition: transform 0.2s;
+}
+
+.toggle__input:checked ~ .toggle__fill::after {
+  transform: translateX(var(--height));
+}
+
+
+</style>
+                                </head>
+                                <body oncontextmenu=(function(){return false}) class='snippet-body'>
+                                <div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <h2 id="heading">Hey there! Let's setup your site</h2>
+                <p>This form will help you setup your site, the only required field is your name and which theme you want</p>
+                <form id="setupForm">
+                    <!-- progressbar -->
+                    <ul id="progressbar">
+                        <li class="active" id="account"><strong>Basic</strong></li>
+                        <li id="personal"><strong>Proffessional</strong></li>
+                        <li id="payment"><strong>Site Settings</strong></li>
+                        <li id="confirm"><strong>Done</strong></li>
+                    </ul>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div> <br> <!-- fieldsets -->
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="fs-title">Basic Info:</h2>
+                                    <p class="fs-subtitle">This is the basic information you need to get started</p>
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="steps">Step 1 - 4</h2>
+                                    
+                                </div>
+                            </div><h4>Only the name field is required</h4> <label class="fieldlabels">Name: *</label> <input type="text" name="name" placeholder="Name" /> <label class="fieldlabels">Email:</label> <input type="email" name="email" placeholder="Email"/> 
+                            <label class="fieldlabels">Phone:</label> <input type="text" name="phone" placeholder="Phone"/> <label class="fieldlabels">Avatar (url to an image):</label> <input type="text" name="avatar" placeholder="avatar"/> <label class="fieldlabels">Biography: </label> <textarea name="biography" placeholder="Biography" rows="4"></textarea>
+                        </div> <input type="button" name="next" class="next action-button" value="Next" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="fs-title">Professional Information:</h2>
+                                    <p class="fs-subtitle">This is just some information about your professional background <br><em>(none of it is required)</em></p>
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="steps">Step 2 - 4</h2>
+                                </div>
+                            </div> <label class="fieldlabels">Address:</label> <input type="text" name="address" placeholder="Address"/> <label class="fieldlabels">Company:</label> <input type="text" name="company" placeholder="company"/> <label class="fieldlabels">Role:</label> <input type="text" name="role" placeholder="role"/>
+                        </div> <input type="button" name="next" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="fs-title">Site Settings:</h2>
+                                    <p class="fs-subtitle">The last set of settings <br><em>(none of it is required)</em></p>
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="steps">Step 3 - 4</h2>
+                                </div>
+                            </div> <!--<label class="fieldlabels">Upload Your Photo:</label> <input type="file" name="pic" accept="image/*"> --> <label class="fieldlabels">Background (URL to a background image for some themes):</label> <input type="text" name="background" placeholder="Background"/> <label class="fieldlabels">UA Code (Google analytics):</label> <input type="text" name="ua_code" placeholder="UA-000000"/> <div class="row"><div class="col-4">
+                                <label class="fieldlabels" >Ignore Exif Data (on gallery images):</label> <label class="toggle" for="ignore_exif_data"><input id="ignore_exif_data" type="checkbox" class="toggle__input" name="ignore_exif_data"/> <div class="toggle__fill"></div></label></div>
+                            
+                            <div class="col-4"><label class="fieldlabels">Resume:</label><br> <label class="toggle" for="resume"><input id="resume" type="checkbox" class="toggle__input" name="resume"/> <div class="toggle__fill"></div></div> </label><div class="col-4"><label class="fieldlabels">Examples (do you want example content to show up):</label> <label class="toggle" for="examples"><input type="checkbox" id="examples" class="toggle__input" name="examples"/> <div class="toggle__fill"></div></div></label></div>
+                            <label for="select-1">Theme(<a href="https://ezcv.readthedocs.io/en/latest/included-themes/" target="_blank">you can find details for each here</a>):</label>
+            <select class="form-control" id="theme" name="theme"><option value="aerial">aerial</option><option value="creative">creative</option><option value="cv">cv</option><option value="dimension" selected="">dimension</option><option value="ethereal">ethereal</option><option value="freelancer">freelancer</option><option value="grayscale">grayscale</option><option value="identity">identity</option><option value="lens">lens</option><option value="paradigm_shift">paradigm_shift</option><option value="read_only">read_only</option><option value="solid_state">solid_state</option><option value="strata">strata</option></select>
+                        </div> <input id="submit" type="button" name="next" class="next action-button" value="Submit"/> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-card">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="fs-title">Finish:</h2>
+                                </div>
+                                <div class="col-5">
+                                    <h2 class="steps">Step 4 - 4</h2>
+                                </div>
+                            </div> <br><br>
+                            <h2 class="purple-text text-center"><strong>SUCCESS !</strong></h2> <br>
+                            <div class="row justify-content-center">
+                                <div class="col-3"> <img src="https://i.imgur.com/GwStPmg.png" class="fit-image"> </div>
+                            </div> <br><br>
+                            <div class="row justify-content-center">
+                                <div class="col-7 text-center">
+                                    <h5 class="purple-text text-center">You Have Successfully Signed Up</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+                                <script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+    <script type='text/javascript' src='formSerialization.js'></script>
+                                
+
+<script type='text/Javascript'>$(document).ready(function(){
+
+var current_fs, next_fs, previous_fs; //fieldsets
+var opacity;
+var current = 1;
+var steps = $("fieldset").length;
+
+setProgressBar(current);
+
+$(".next").click(function(){
+
+current_fs = $(this).parent();
+next_fs = $(this).parent().next();
+
+//Add Class Active
+$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+//show the next fieldset
+next_fs.show();
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+next_fs.css({'opacity': opacity});
+},
+duration: 500
+});
+setProgressBar(++current);
+});
+
+$(".previous").click(function(){
+
+current_fs = $(this).parent();
+previous_fs = $(this).parent().prev();
+
+//Remove class active
+$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+//show the previous fieldset
+previous_fs.show();
+
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now) {
+// for making fielset appear animation
+opacity = 1 - now;
+
+current_fs.css({
+'display': 'none',
+'position': 'relative'
+});
+previous_fs.css({'opacity': opacity});
+},
+duration: 500
+});
+setProgressBar(--current);
+});
+
+function setProgressBar(curStep){
+var percent = parseFloat(100 / steps) * curStep;
+percent = percent.toFixed();
+$(".progress-bar")
+.css("width",percent+"%")
+}
+
+$(".submit").click(function(){
+return false;
+})
+
+});</script>
+
+
+<script type='text/Javascript'>
+    const submitButton = document.getElementById('submit');
+    submitButton.addEventListener('click', (event) => {
+        setupForm = document.getElementById('setupForm');
+        var formData =serializeForm(setupForm);
+        var data = {};
+        for (var index in formData) {
+            data[formData[index]["name"]] = formData[index]["value"];
+        }
+        console.log(data)
+        fetch("/setup", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(res => {
+                console.log("Request complete! response:", res);
+                var currentUrl = window.location.href;
+                var redirect_url = currentUrl.replace("setup", "");
+                window.location.href = redirect_url;
+            });
+    })
+    
+</script>
+
+                                </body>
+                            </html>

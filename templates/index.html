@@ -1,57 +1,172 @@
-<!-- Include stylesheet -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<!-- Include the Quill library -->
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/quilljs-markdown@latest/dist/quilljs-markdown.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.0.3/showdown.min.js" integrity="sha512-vx8rJNrYIZPDr290AV2tL04x0CKjLHSnTXrHMeb1kqbhfGwBnclPDOWIWxRiVS6Oe1oGzk5MzNz/eLzVku30kg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- Bootstrap-->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">  -->
+<link rel="stylesheet" id="themeCSS" href="/bootstrap-dark.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
 <script src="configManagement.js"></script>
 <script src="formSerialization.js"></script>
+<script src="utilities.js"></script>
 
+<style>
 
-<h1 id="title">Available files</h1>
-<!-- TODO: Custom parsing for gallery-->
-<a href="/images" class="btn btn-info" role="button">Click here to see all images</a>
+.ml-auto {
+    margin-left: auto !important;
+    padding-right: 60px;
+}
 
-<a href="/preview" class="btn btn-info" role="button">Click here to see a site preview</a>
+</style>
 
-
-<h2>Config (comming soon)</h2>
-<div id="config" style="padding-left: 15px;padding-right: 15px;">
-  <form id="configForm">
-  <!--This will be filled with the config that exists-->
-  </form>
-</div>
-
-<button onclick=serializeCurrentContent()>Click me</button>
-
-<div class="container">
-<!-- TODO: make each section an accordion-->
-{% for section in files %}
-<div class="row">
-<h2 class=" col-lg-12">{{section}}</h2>
-{% for file in files[section] %}
-<div class="card col-md-auto" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">{{file}}</h5>
-    <a href="/content/{{section}}/{{file}}" class="btn btn-primary">Open</a>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="mx-auto order-0">
+      <a class="navbar-brand mx-auto" href="#">EZCV Editor</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+          <span class="navbar-toggler-icon"></span>
+      </button>
   </div>
-</div>
-{% endfor %}
-</div> <!--End of row--> 
-<br>
-{% endfor %}
+  <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+      <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a href="/images" class="nav-link">Images</a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="/preview" class="nav-link"> Generate Site preview</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              ⚙️ Settings
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a id="themeIndicator" onclick=changeTheme() class="dropdown-item"><!--Filled in script tag--></a>
+              <a id="viewIndicator" onclick=toggleView() class="dropdown-item"><i class="bi bi-grid-3x3"></i>  Grid View</a>
+            </div>
+          </li>
+      </ul>
+  </div>
+</nav>
 
-</div>
+<body>
+  <h2>Config</h2>
+
+  <div id="config" style="padding-left: 15px; padding-right: 15px;">
+    <form id="configForm" class="row">
+    <!--This will be filled with the config that exists-->
+    </form>
+  </div>
+
+
+  <button class="btn btn-info" onclick=serializeCurrentContent()>Click me to store config</button>
+
+  <h2>Content</h2>
+  <br>
+  <!-- <button class="btn btn-info" onclick=toggleView()>Click me to toggle view</button> -->
+  <br>
+  <br>
+  <div class="container" id="gridView" hidden>
+  <!-- TODO: make each section an accordion-->
+  {% for section in files %}
+  <div class="row">
+  <h2 class=" col-lg-12">📁{{section}}</h2>
+  {% for file in files[section] %}
+  <div class="card col-md-auto" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">{{file}}</h5>
+      <a href="/content/{{section}}/{{file}}" class="btn btn-primary">Open</a>
+    </div>
+  </div>
+  {% endfor %}
+  </div> <!--End of row--> 
+  <br>
+  {% endfor %}
+  </div>
+
+  <div id="accordion" hidden>
+
+
+    {% for section in files %}
+    {% set sectionNumber = loop.index0 %}
+      {% if sectionNumber == 0 %}
+        {% set expanded =  'true'%}
+        {% set collapse =  'show'%}
+      {% else %}
+        {% set expanded =  ' false'%}
+        {% set collapse =  ''%}
+      {% endif %}
+    <div class="card">
+      <div class="card-header" id="heading{{sectionNumber}}">
+        <h5 class="mb-0">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{sectionNumber}}" aria-expanded="{{expanded}}" aria-controls="collapse{{sectionNumber}}">
+            <h2>📁{{section}}</h2>
+          </button>
+        </h5>
+      </div>
+
+      <div id="collapse{{sectionNumber}}" class="collapse{{collapse}}" aria-labelledby="heading{{sectionNumber}}" data-parent="#accordion">
+        <div class="card-body">
+          <div class="row">
+            {% for file in files[section] %}
+            <div class="card col-md-auto" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title">{{file}}</h5>
+                <a href="/content/{{section}}/{{file}}" class="btn btn-primary">Open</a>
+              </div>
+            </div>
+            {% endfor %}
+            </div> <!--End of row--> 
+
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</body>
 
 <script>
+    // Get the config file and display it
     fetch("/config").then(response => response.text()).then(text => {
-        console.log(text);                   // Display config
-        console.log(typeof text);                   // Display config
-        var config = JSON.parse(text);
-        displayconfig(config);
-    });
+      var config = JSON.parse(text);
+      displayconfig(config);
+      if (document.getElementById("name").value === "" || document.getElementById("name").value === null) {
+        var currentUrl = window.location.href;
+        window.location.href=currentUrl + "/setup";
+    }
+  });
+
+  // Get the elements of the content view
+  const accordionView = document.getElementById("accordion");
+  const gridView = document.getElementById("gridView");
+
+  const viewIndicator = document.getElementById("viewIndicator");
+  
+  // Setup the view to be a grid or accordion initially
+  whichView = localStorage.getItem('view');
+  if (whichView == null) {
+    localStorage.setItem("view", "grid");
+    viewIndicator.innerHTML = '<i class="bi bi-grid-3x3"></i>  Grid View';
+  }else if(whichView ==="grid"){
+    accordionView.hidden = true;
+    gridView.hidden = false;
+    viewIndicator.innerHTML = '<i class="bi bi-grid-3x3"></i>  Grid View';
+  }else{
+    accordionView.hidden = false;
+    gridView.hidden = true;
+    viewIndicator.innerHtml = '<i class="bi bi-journal-arrow-down"></i>  Accordion View';
+  }
+
+  const themeIndicator = document.getElementById("themeIndicator");
+  whichTheme = localStorage.getItem("theme");
+  if (whichTheme == null) {
+    themeIndicator.innerHTML = '🌙  Dark Theme';
+  } else if (whichTheme === 'light') {
+      themeIndicator.innerHTML = '☀️  Light Theme';
+    } else {
+      themeIndicator.innerHTML = '🌙  Dark Theme';
+    }
+
 </script>

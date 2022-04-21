@@ -10,6 +10,9 @@ return function (form) {
             //remove disabled elements
             return !element.disabled;
         }).filter(function (element) {
+            //remove disabled elements
+            return element.name!=null && element.name!="" && element.name!="next" && element.name != "previous" && element.name!="submit";
+        }).filter(function (element) {
             //remove <select multiple> elements with no values selected
             return !/^select$/i.test(element.tagName) || element.selectedOptions.length > 0;
         }).map(function (element) {
@@ -64,3 +67,8 @@ return function (form) {
         });
 }
 }(Array.prototype.slice));
+
+function isNumber(num){
+    // Checks if num is a number (or entirely numbers)
+    return !isNaN(num)
+}
