@@ -1,7 +1,7 @@
 # First Party Dependencies
 import os                               # Used in path manipulation
 import json
-from re import M                             # Used to parse & send JSON
+import shutil                             # Used to parse & send JSON
 import time                             # Used to force sleep when previewing
 import webbrowser                       # Used to open installed webbrowsers on client
 from typing import Union                # Used to indicating types when there are multiple types 
@@ -14,10 +14,9 @@ from jinja2.exceptions import TemplateNotFound  # Used to catch errors when load
 ## Used for all forms of HTTP interactions
 from flask import render_template, Flask, request, redirect, send_file, Request, Response
 
+template_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 
-template_dir = 'site' # The folder you want to export your site to
-
-app = Flask(__name__, static_url_path='', static_folder="content",  template_folder="templates")
+app = Flask(__name__, static_url_path='', static_folder="content",  template_folder=template_folder)
 
 # Turn these on when you're developing
 # app.config["DEBUG"] = True
@@ -107,6 +106,13 @@ def setup() -> str:
 @app.route('/')
 def index() -> str:
     """display the homepage"""
+    if not os.path.exists("config.yml"):
+        from ezcv.cli import init as ezcv_init
+        ezcv_init(name="temp-proj")
+        for current_file in os.listdir("temp-proj"):
+            shutil.move(f"temp-proj/{current_file}", f"{current_file}")
+        os.rmdir("temp-proj")
+        return setup()
     files = {}
     sections = []
     for path in os.listdir("content"):
@@ -208,10 +214,10 @@ def static_file(path:str) -> Union[str, bytes]:
 
     # If the file is a static file that can be returned as strings
     elif path.endswith(".js"):
-        with open(f"templates/{path}", "r", encoding="utf-8") as f:
+        with open(f"{template_folder}{os.sep}{path}", "r", encoding="utf-8") as f:
             return f.read()
     elif path.endswith(".css"):
-        with open(f"templates/{path}", "r", encoding="utf-8") as f:
+        with open(f"{template_folder}{os.sep}{path}", "r", encoding="utf-8") as f:
             return f.read()
 
     # If the file is a static file that can be returned as bytes

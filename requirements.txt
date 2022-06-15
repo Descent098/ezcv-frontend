@@ -1,3 +1,0 @@
-ezcv
-flask
-pyyaml

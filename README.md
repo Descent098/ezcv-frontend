@@ -1,6 +1,6 @@
 THIS PROJECT IS A WIP, IT IS NOT SECURE TO RUN LONG TERM, AND NOT WELL DOCUMENTED
 
-# Ezcv Frontend
+# Ezcv Frontend/gui
 
 This project is to do some digging into the possibility of building out a frontend for ezcv
 
@@ -10,19 +10,26 @@ This project is to do some digging into the possibility of building out a fronte
 
 You will need python 3 and pip for python 3
 
-### Install prerequisites
+### Install from source
 
-You have two choices:
-
-1. Run `pip install -r requirements.txt`
-2. Install the dependencies individually:
-   `pip install ezcv`, `pip install pyyaml` and `pip install flask`
+1. Clone this repository [https://github.com/Descent098/ezcv-frontend](https://github.com/Descent098/ezcv-frontend)
+2. cd into `ezcv-frontend` and run `pip install .`
 
 
+## Usage
+
+### With existing ezcv project
+
+1. cd into the project directory (where `config.yml` is) and run either `ezcv-frontend` or `ezcv-gui`
+
+### With new ezcv project
+
+1. Create a new folder for your project (when you run the gui it will create all the files for a project)
+2. Run `ezcv-gui` or `ezcv-frontend` and fill out the setup form
 
 ## Templates & Routes
 
-Below is a breakdown for the templates
+Below is a breakdown for the templates found in `ezcv_gui/templates`
 
 ### index.html
 

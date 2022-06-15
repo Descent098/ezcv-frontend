@@ -126,7 +126,7 @@ p {
     text-align: left
 }
 
-.purple-text {
+.blue-text {
     color: #2436bc;
     font-weight: normal
 }
@@ -346,13 +346,13 @@ p {
                                     <h2 class="steps">Step 4 - 4</h2>
                                 </div>
                             </div> <br><br>
-                            <h2 class="purple-text text-center"><strong>SUCCESS !</strong></h2> <br>
+                            <h2 class="blue-text text-center"><strong>SUCCESS !</strong></h2> <br>
                             <div class="row justify-content-center">
-                                <div class="col-3"> <img src="https://i.imgur.com/GwStPmg.png" class="fit-image"> </div>
+                                <div class="col-3"> <h2 class="text-center" style="font-size:5em">☑️</h2> </div>
                             </div> <br><br>
                             <div class="row justify-content-center">
                                 <div class="col-7 text-center">
-                                    <h5 class="purple-text text-center">You Have Successfully Signed Up</h5>
+                                    <h5 class="blue-text text-center">You Have Successfully Signed Up</h5>
                                 </div>
                             </div>
                         </div>
@@ -366,85 +366,89 @@ p {
     <script type='text/javascript' src='formSerialization.js'></script>
                                 
 
-<script type='text/Javascript'>$(document).ready(function(){
+<script type='text/Javascript'>
+// Function to handle the form animations and fancy stuff
 
-var current_fs, next_fs, previous_fs; //fieldsets
-var opacity;
-var current = 1;
-var steps = $("fieldset").length;
+$(document).ready(function(){
+    var current_fs, next_fs, previous_fs; //fieldsets
+    var opacity;
+    var current = 1;
+    var steps = $("fieldset").length;
 
-setProgressBar(current);
+    setProgressBar(current);
 
-$(".next").click(function(){
+    $(".next").click(function(){
 
-current_fs = $(this).parent();
-next_fs = $(this).parent().next();
+    current_fs = $(this).parent();
+    next_fs = $(this).parent().next();
 
-//Add Class Active
-$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+    //Add Class Active
+    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
 
-//show the next fieldset
-next_fs.show();
-//hide the current fieldset with style
-current_fs.animate({opacity: 0}, {
-step: function(now) {
-// for making fielset appear animation
-opacity = 1 - now;
+    //show the next fieldset
+    next_fs.show();
+    //hide the current fieldset with style
+    current_fs.animate({opacity: 0}, {
+    step: function(now) {
+    // for making fielset appear animation
+    opacity = 1 - now;
 
-current_fs.css({
-'display': 'none',
-'position': 'relative'
-});
-next_fs.css({'opacity': opacity});
-},
-duration: 500
-});
-setProgressBar(++current);
-});
+    current_fs.css({
+    'display': 'none',
+    'position': 'relative'
+    });
+    next_fs.css({'opacity': opacity});
+    },
+    duration: 500
+    });
+    setProgressBar(++current);
+    });
 
-$(".previous").click(function(){
+    $(".previous").click(function(){
 
-current_fs = $(this).parent();
-previous_fs = $(this).parent().prev();
+    current_fs = $(this).parent();
+    previous_fs = $(this).parent().prev();
 
-//Remove class active
-$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+    //Remove class active
+    $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
 
-//show the previous fieldset
-previous_fs.show();
+    //show the previous fieldset
+    previous_fs.show();
 
-//hide the current fieldset with style
-current_fs.animate({opacity: 0}, {
-step: function(now) {
-// for making fielset appear animation
-opacity = 1 - now;
+    //hide the current fieldset with style
+    current_fs.animate({opacity: 0}, {
+    step: function(now) {
+    // for making fielset appear animation
+    opacity = 1 - now;
 
-current_fs.css({
-'display': 'none',
-'position': 'relative'
-});
-previous_fs.css({'opacity': opacity});
-},
-duration: 500
-});
-setProgressBar(--current);
-});
+    current_fs.css({
+    'display': 'none',
+    'position': 'relative'
+    });
+    previous_fs.css({'opacity': opacity});
+    },
+    duration: 500
+    });
+    setProgressBar(--current);
+    });
 
-function setProgressBar(curStep){
-var percent = parseFloat(100 / steps) * curStep;
-percent = percent.toFixed();
-$(".progress-bar")
-.css("width",percent+"%")
-}
+    function setProgressBar(curStep){
+    var percent = parseFloat(100 / steps) * curStep;
+    percent = percent.toFixed();
+    $(".progress-bar")
+    .css("width",percent+"%")
+    }
 
-$(".submit").click(function(){
-return false;
-})
+    $(".submit").click(function(){
+    return false;
+    })
 
-});</script>
+    });
+</script>
 
 
 <script type='text/Javascript'>
+    // Submission handler
     const submitButton = document.getElementById('submit');
     submitButton.addEventListener('click', (event) => {
         setupForm = document.getElementById('setupForm');
@@ -467,8 +471,7 @@ return false;
                 var redirect_url = currentUrl.replace("setup", "");
                 window.location.href = redirect_url;
             });
-    })
-    
+    });
 </script>
 
                                 </body>
