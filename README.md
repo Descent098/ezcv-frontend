@@ -1,10 +1,19 @@
 THIS PROJECT IS A WIP, IT IS NOT SECURE TO RUN LONG TERM, AND NOT WELL DOCUMENTED
 
+## Current TODO's
+
+- [ ] Ability to create files
+  - [ ] Based on fields
+  - [ ] Enforce required fields
+- [ ] Enforce `required_config`
+- [ ] Add unified themeing with an app shell
+- [ ] Fix image overview themeing
+- [ ] Add warning if non-required attributes are filled out when editing a piece of content
+
+
 # Ezcv Frontend/gui
 
 This project is to do some digging into the possibility of building out a frontend for ezcv
-
-
 
 ## Setup
 

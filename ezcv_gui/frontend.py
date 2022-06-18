@@ -16,7 +16,9 @@ from flask import render_template, Flask, request, redirect, send_file, Request,
 
 template_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 
-app = Flask(__name__, static_url_path='', static_folder="content",  template_folder=template_folder)
+project_path = os.path.abspath(".")
+
+app = Flask(__name__, static_url_path='', static_folder=os.path.join(project_path, "content"),  template_folder=template_folder)
 
 # Turn these on when you're developing
 # app.config["DEBUG"] = True
@@ -139,7 +141,11 @@ def image_overview() -> str:
     files = []
     for path in os.listdir("images"):
         files.append(path)
-    return render_template('images.html', files=files)
+    gallery_files = []
+    if os.path.exists("content/gallery"):
+        for path in os.listdir("content/gallery"):
+            gallery_files.append(os.path.join("gallery", path))
+    return render_template('images.html', files = files, gallery = gallery_files)
 
 
 @app.route('/content/<section>/<path>')
@@ -209,7 +215,8 @@ def static_file(path:str) -> Union[str, bytes]:
         if request.method == 'POST':
             store_markdown_from_response(request, path)
         else:
-            with open(f"content/{path}", "r") as f:
+            print(f"{path=}")
+            with open(f"./content/{path}", "r") as f:
                 return f.read()
 
     # If the file is a static file that can be returned as strings
@@ -222,11 +229,19 @@ def static_file(path:str) -> Union[str, bytes]:
 
     # If the file is a static file that can be returned as bytes
     elif path.endswith(".jpg"):
-        with open(f"images/{path}", "rb") as f:
-            return f.read()
+        if os.path.exists(f"images/{path}"):
+            with open(f"images/{path}", "rb") as f:
+                return f.read()
+        else:
+            with open(f"{template_folder}{os.sep}{path}", "rb") as f:
+                return f.read()
     elif path.endswith(".png"):
-        with open(f"images/{path}", "rb") as f:
-            return f.read()
+        if os.path.exists(f"images/{path}"):
+            with open(f"images/{path}", "rb") as f:
+                return f.read()
+        else:
+            with open(f"{template_folder}{os.sep}{path}", "rb") as f:
+                return f.read()
 
     try:
         return render_template(f"{path}.html")
